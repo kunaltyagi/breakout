@@ -21,3 +21,15 @@ initial:
 	rm -f *.out
 	make clean
 
+raw: hello.bin
+
+hello.bin: hello.asm
+#make a raw image
+	nasm -f bin -o hello.bin hello.asm
+#convert to floppy disk image
+	dd status=noxfer conv=notrunc if=hello.bin of=hello.flp
+#or to an iso, to load using a cd/penD
+#	mkisofs -o hello.iso -b hello.flp cdiso/
+
+simulate: hello.bin
+	qemu -fda hello.flp
